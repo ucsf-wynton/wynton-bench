@@ -18,3 +18,4 @@ test-files/R.tar.gz:
 
 check:
 	shellcheck utils/*.sh
+	shellcheck -x bench-scripts/*.sh
