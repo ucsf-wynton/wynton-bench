@@ -48,25 +48,25 @@
 ##############################################################################
 
 ## Constants
-_BENCH_TIME=$(type -P time)
-_BENCH_TIME_OPTS="--quiet"
-_BENCH_TIME_OPTS=
-_BENCH_FORMAT="%e\t%S\t%U\t%P\t%w\t%c\t%I\t%O\t%x\t%C"
-_BENCH_FORMAT_HEADER="ru_wallclock\tru_stime\tru_utime\tcpu_pct\tru_nvcsw\tru_invcsw\t\tru_inblock\tru_outblock\texit_status\tcommand"
+BENCH_TIME=$(type -P time)
+BENCH_TIME_OPTS="--quiet"
+BENCH_TIME_OPTS=
+BENCH_FORMAT="%e\t%S\t%U\t%P\t%w\t%c\t%I\t%O\t%x\t%C"
+BENCH_FORMAT_HEADER="ru_wallclock\tru_stime\tru_utime\tcpu_pct\tru_nvcsw\tru_invcsw\t\tru_inblock\tru_outblock\texit_status\tcommand"
 
 bench_header() {
-    printf "%s\n" "$_BENCH_FORMAT_HEADER"
+    printf "%s\n" "$BENCH_FORMAT_HEADER"
 }    
 
 bench() {
     local outfile
-    outfile=${_BENCH_LOGFILE:-$(mktemp)}
+    outfile=${BENCH_LOGFILE:-$(mktemp)}
     
     printf "%s" "$(date --rfc-3339=seconds)" >> "$outfile"
     printf "\t" >> "$outfile"
-    "$_BENCH_TIME" --output="$outfile" --append $_BENCH_TIME_OPTS --format "$_BENCH_FORMAT" "$@"
+    "$BENCH_TIME" --output="$outfile" --append $BENCH_TIME_OPTS --format "$BENCH_FORMAT" "$@"
     
-    if [[ -z "$_BENCH_LOGFILE" ]]; then
+    if [[ -z "$BENCH_LOGFILE" ]]; then
 	>&2 cat "$outfile"
 	rm "$outfile"
     fi
