@@ -26,10 +26,11 @@ chdir "$TEST_DRIVE"
 tmpdir=$(mktemp --tmpdir="$PWD" --directory .bench.XXXXXX)
 chdir "$tmpdir"
 
-# Record the test drive
+# Record session info
 bench echo "HOSTNAME=$HOSTNAME" > /dev/null
-bench echo "TEST_DRIVE=$TEST_DRIVE" > /dev/null
+bench echo "uptime=$(uptime)" > /dev/null
 bench echo "PWD=$PWD" > /dev/null
+bench echo "TEST_DRIVE=$TEST_DRIVE" > /dev/null
 
 # Benchmark copying a large tarball to current drive
 tarball="$BENCH_HOME/test-files/R.tar.gz"
@@ -43,7 +44,7 @@ bench tar xzf "$(basename "$tarball")"
 bench chmod -R u+w R/
 
 # Benchmark ls -lR on current drive
-bench ls -lR "R/lib*/R/library/base/" > /dev/null
+bench ls -lR -- R/lib*/R/library/base/ > /dev/null
 
 # Benchmark launching Rscript (minimal) that lives on current drive
 TMPDIR=. bench R/bin/Rscript --version > /dev/null
