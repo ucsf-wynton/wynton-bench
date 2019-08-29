@@ -59,5 +59,10 @@ bench_header() {
 }    
 
 bench() {
-    "$_BENCH_TIME" $_BENCH_TIME_OPTS --format "$_BENCH_FORMAT" "$@"
+    tmpfile=$(mktemp)
+    "$_BENCH_TIME" $_BENCH_TIME_OPTS --format "$_BENCH_FORMAT" "$@" 2> "$tmpfile"
+    >&2 printf "%s" "$(date --rfc-3339=seconds)"
+    >&2 printf "\t"
+    >&2 cat "$tmpfile"
+    rm "$tmpfile"
 }
