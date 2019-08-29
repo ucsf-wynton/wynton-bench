@@ -1,5 +1,8 @@
 #! /usr/bin/env bash
 ##############################################################################
+## LOAD:
+## . utils/bench.sh
+##
 ## USAGE:
 ## bench <command>
 ##
@@ -45,16 +48,16 @@
 ##############################################################################
 
 ## Constants
-_BENCH_TIME="$(which time)"
+_BENCH_TIME=$(type -P time)
 _BENCH_TIME_OPTS="--quiet"
 _BENCH_TIME_OPTS=
 _BENCH_FORMAT="%e\t%S\t%U\t%P\t%w\t%c\t%I\t%O\t%x\t%C"
 _BENCH_FORMAT_HEADER="ru_wallclock\tru_stime\tru_utime\tcpu_pct\tru_nvcsw\tru_invcsw\t\tru_inblock\tru_outblock\texit_status\tcommand"
 
 bench_header() {
-    printf "$_BENCH_FORMAT_HEADER\n"
+    printf "%s\n" "$_BENCH_FORMAT_HEADER"
 }    
 
 bench() {
-    "$_BENCH_TIME" $_BENCH_TIME_OPTS --format "$_BENCH_FORMAT" $*
-}    
+    "$_BENCH_TIME" $_BENCH_TIME_OPTS --format "$_BENCH_FORMAT" "$@"
+}
