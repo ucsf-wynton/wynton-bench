@@ -43,7 +43,7 @@ bench tar xzf "$(basename "$tarball")"
 bench chmod -R u+w R/
 
 # Benchmark ls -lR on current drive
-bench ls -lR R/lib/R/library/base/ > /dev/null
+bench ls -lR "R/lib*/R/library/base/" > /dev/null
 
 # Benchmark launching Rscript (minimal) that lives on current drive
 TMPDIR=. bench R/bin/Rscript --version > /dev/null
