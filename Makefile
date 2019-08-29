@@ -14,7 +14,7 @@ test-files/R.tar.gz:
 	cp -pR "$(R_HOME)" R
 	find R -type f -exec sed -i -e "s|$(R_HOME)|{{R_HOME}}/R|g" {} \;
 	tar czf "$@" R
-	chmod -R u+x R
+	chmod -R u+w R
 	rm -rf R
 	ls -l "$@"
 
