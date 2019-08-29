@@ -46,6 +46,12 @@ bench chmod -R u+w R/
 # Benchmark ls -lR on current drive
 bench ls -lR -- R/lib*/R/library/base/ > /dev/null
 
+# Move R installation to this location (so that it can run)
+find R/ -type f -exec sed -i -e "s|{{R_HOME}}|${PWD}/R|g" {} \;
+R_LIBS_USER="R" R_LIBS_SITE="R" R/bin/Rscript --vanilla -e ".libPaths()"
+
+export R_LIBS_USER=R
+
 # Benchmark launching Rscript (minimal) that lives on current drive
 TMPDIR=. bench R/bin/Rscript --version > /dev/null
 

@@ -11,9 +11,11 @@ test-files: test-files/R.tar.gz
 
 test-files/R.tar.gz:
 	mkdir -p test-files
-	ln -fs "$(R_HOME)" R
-	tar --dereference -v -c -z -f "$@" R
-	rm R
+	cp -pR "$(R_HOME)" R
+	find R -type f -exec sed -i -e "s|$(R_HOME)|{{R_HOME}}/R|g" {} \;
+	tar czf "$@" R
+	chmod -R u+x R
+	rm -rf R
 	ls -l "$@"
 
 check:
