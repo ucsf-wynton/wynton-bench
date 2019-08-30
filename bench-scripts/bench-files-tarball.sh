@@ -16,7 +16,13 @@ chdir() {
 # shellcheck disable=SC1090
 . "$BENCH_HOME/utils/bench.sh"
 
+BENCH_LOGPATH=${BENCH_LOGPATH:-${PWD}}
+
 [[ -z "$TEST_DRIVE" ]] && error "'TEST_DRIVE' not set or empty"
+
+BENCH_LOGNAME=${BENCH_LOGNAME:-"bench-files-tarball_${TEST_DRIVE//\//_}.log"}
+BENCH_LOGFILE=${BENCH_LOGFILE:-"$BENCH_LOGPATH/$BENCH_LOGNAME"}
+echo "BENCH_LOGFILE=$BENCH_LOGFILE"
 
 opwd=$PWD
 chdir "$TEST_DRIVE"
