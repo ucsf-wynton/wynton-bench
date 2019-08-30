@@ -46,7 +46,10 @@ bench cp "$tarball" .
 bench tar zxf "$(basename "$tarball")"
 
 # Benchmark ls -lR on current drive
-bench ls -lR -- R-2.0.0/src/library/base/ > /dev/null
+bench ls -lR -- R-2.0.0/src/library/ > /dev/null
+
+# Benchmark finding file current drive
+bench find R-2.0.0/ -type f -name Rconnections.h > /dev/null
 
 # Benchmark du -b
 bench du -sb R-2.0.0/ > /dev/null
