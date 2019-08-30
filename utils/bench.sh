@@ -62,12 +62,10 @@ bench() {
     local outfile tmpfile
     outfile=${BENCH_LOGFILE:-$(mktemp)}
     
-    printf "%s" "$(date --rfc-3339=seconds)" >> "$outfile"
-    printf "\t" >> "$outfile"
+    { printf "%s" "$(date --rfc-3339=seconds)"; printf "\t"; } >> "$outfile"
     tmpfile=$(mktemp)
     "$BENCH_TIME" --output="$tmpfile" --append $BENCH_TIME_OPTS --format "$BENCH_FORMAT" "$@"
-    printf "%s" "$(date --rfc-3339=seconds)" >> "$outfile"
-    printf "\t" >> "$outfile"
+    { printf "%s" "$(date --rfc-3339=seconds)"; printf "\t"; } >> "$outfile"
     cat "$tmpfile" >> "$outfile"
     rm "$tmpfile"
     
