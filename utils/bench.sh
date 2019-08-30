@@ -55,16 +55,21 @@ BENCH_FORMAT="%e\t%S\t%U\t%P\t%w\t%c\t%I\t%O\t%x\t%C"
 BENCH_FORMAT_HEADER="ru_wallclock\tru_stime\tru_utime\tcpu_pct\tru_nvcsw\tru_invcsw\t\tru_inblock\tru_outblock\texit_status\tcommand"
 
 bench_header() {
-    printf "%s\n" "$BENCH_FORMAT_HEADER"
+    printf "begin\tend\t%s\n" "$BENCH_FORMAT_HEADER"
 }    
 
 bench() {
-    local outfile
+    local outfile tmpfile
     outfile=${BENCH_LOGFILE:-$(mktemp)}
     
     printf "%s" "$(date --rfc-3339=seconds)" >> "$outfile"
     printf "\t" >> "$outfile"
-    "$BENCH_TIME" --output="$outfile" --append $BENCH_TIME_OPTS --format "$BENCH_FORMAT" "$@"
+    tmpfile=$(mktemp)
+    "$BENCH_TIME" --output="$tmpfile" --append $BENCH_TIME_OPTS --format "$BENCH_FORMAT" "$@"
+    printf "%s" "$(date --rfc-3339=seconds)" >> "$outfile"
+    printf "\t" >> "$outfile"
+    cat "$tmpfile" >> "$outfile"
+    rm "$tmpfile"
     
     if [[ -z "$BENCH_LOGFILE" ]]; then
 	>&2 cat "$outfile"
