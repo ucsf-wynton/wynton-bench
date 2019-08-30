@@ -40,7 +40,6 @@ bench echo "TEST_DRIVE=$TEST_DRIVE" > /dev/null
 
 # Benchmark copying a large tarball to current drive
 tarball="$BENCH_HOME/test-files/R-2.0.0.tar.gz"
-ls -l "$tarball" 
 bench cp "$tarball" .
 
 # Benchmark untaring to current drive
