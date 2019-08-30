@@ -17,6 +17,7 @@ chdir() {
 . "$BENCH_HOME/utils/bench.sh"
 
 BENCH_LOGPATH=${BENCH_LOGPATH:-${PWD}}
+mkdir -p "$BENCH_LOGPATH"
 
 [[ -z "$TEST_DRIVE" ]] && error "'TEST_DRIVE' not set or empty"
 
