@@ -7,16 +7,11 @@ debug:
 
 .PHONY: test
 
-test-files: test-files/R.tar.gz
+test-files: test-files/R-3.6.1.tar.gz
 
-test-files/R.tar.gz:
-	mkdir -p test-files
-	cp -pR "$(R_HOME)" R
-	find R -type f -exec sed -i -e "s|$(R_HOME)|{{R_HOME}}/R|g" {} \;
-	tar czf "$@" R
-	chmod -R u+w R
-	rm -rf R
-	ls -l "$@"
+test-files/R-3.6.1.tar.gz:
+	cd $(@D);\
+	curl -O https://cloud.r-project.org/src/base/R-3/R-3.6.1.tar.gz
 
 check:
 	shellcheck utils/*.sh
