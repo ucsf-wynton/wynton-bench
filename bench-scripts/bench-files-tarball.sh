@@ -19,6 +19,8 @@ chdir() {
 BENCH_LOGPATH=${BENCH_LOGPATH:-${PWD}}
 mkdir -p "$BENCH_LOGPATH"
 
+RAMTMPDIR=${RAMTMPDIR:-/tmp}
+
 [[ -z "$TEST_DRIVE" ]] && error "'TEST_DRIVE' not set or empty"
 
 BENCH_LOGNAME=${BENCH_LOGNAME:-"bench-files-tarball_${TEST_DRIVE//\//_}.log"}
@@ -29,9 +31,13 @@ echo "$BENCH_LOGFILE"
 opwd=$PWD
 chdir "$TEST_DRIVE"
 
+# Create temporary working directory on drive reciding in memory,
+# which typically is /tmp
+tmpdir=$(mktemp --tmpdir="$RAMTMPDIR" --directory .bench.XXXXXX)
+
 # Create temporary working directory on current drive
-tmpdir=$(mktemp --tmpdir="$PWD" --directory .bench.XXXXXX)
-chdir "$tmpdir"
+workdir=$(mktemp --tmpdir="$PWD" --directory .bench.XXXXXX)
+chdir "$workdir"
 
 # Record session info
 bench echo "HOSTNAME=$HOSTNAME" > /dev/null
@@ -39,12 +45,25 @@ bench echo "uptime=$(uptime)" > /dev/null
 bench echo "PWD=$PWD" > /dev/null
 bench echo "TEST_DRIVE=$TEST_DRIVE" > /dev/null
 
-# Benchmark copying a large tarball to current drive
-tarball="$BENCH_HOME/test-files/R-2.0.0.tar.gz"
-bench cp "$tarball" .
+# Benchmark copying a large tarball to RAM temporary drive
+# Comment: Over a long time, this will give us relative stats on
+# the performance on the RAM temporary drive on the local machine
+tarball="R-2.0.0.tar.gz"
+tarball_path="$BENCH_HOME/test-files"
+bench cp "$tarball_path/$tarball" "$tmpdir"
 
-# Benchmark untaring to current drive
-bench tar zxf "$(basename "$tarball")"
+# Benchmark copying tarball to current drive, e.g. /tmp -> /scratch
+bench cp "$tmpdir/$tarball" .
+
+# Benchmark copying tarball from current drive, e.g. /scratch -> /tmp
+rm -- "$tmpdir/$tarball"
+bench cp "$tarball" "$tmpdir"
+
+# Benchmark remove tarball from current drive, e.g. rm /scratch
+rm -- "$tarball"
+
+# Benchmark untaring to current drive, e.g. /tmp/a.tar.gz -> /scratch
+bench tar zxf "$tmpdir/$tarball" -C .
 
 # Benchmark ls -lR on current drive
 bench ls -lR -- R-2.0.0/src/library/ > /dev/null
@@ -63,4 +82,5 @@ bench rm -rf R-2.0.0/
 
 # Cleanup
 chdir "$opwd"
+rm -rf -- "$workdir"
 rm -rf -- "$tmpdir"
