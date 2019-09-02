@@ -48,6 +48,7 @@
 ##############################################################################
 
 ## Constants
+RAMTMPDIR=${RAMTMPDIR:-/tmp}
 BENCH_TIME=$(type -P time)
 BENCH_TIME_OPTS="--quiet"
 BENCH_TIME_OPTS=
@@ -60,7 +61,7 @@ bench_header() {
 
 bench() {
     local outfile
-    outfile=$(mktemp)
+    outfile=$(mktemp --tmpdir="$RAMTMPDIR")
     
     { printf "%s" "$(date --rfc-3339=seconds)"; printf "\t"; } >> "$outfile"
     "$BENCH_TIME" --output="$outfile" --append $BENCH_TIME_OPTS --format "$BENCH_FORMAT" "$@"
