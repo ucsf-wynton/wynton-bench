@@ -28,6 +28,12 @@ BENCH_LOGFILE=${BENCH_LOGFILE:-"$BENCH_LOGPATH/$BENCH_LOGNAME"}
 echo "BENCH_LOGFILE:"
 echo "$BENCH_LOGFILE"
 
+## Append to log file atomically
+BENCH_LOGFILE_FINAL=$BENCH_LOGFILE
+BENCH_LOGFILE=$(mktemp --tmpdir="$RAMTMPDIR" BENCH_LOGFILE.XXXXXX)
+echo "BENCH_LOGFILE (temporary):"
+echo "$BENCH_LOGFILE"
+
 opwd=$PWD
 chdir "$TEST_DRIVE"
 
@@ -94,3 +100,6 @@ bench rm -rf R-2.0.0/
 chdir "$opwd"
 rm -rf -- "$workdir"
 rm -rf -- "$tmpdir"
+
+# Append all collected output
+cat "$BENCH_LOGFILE" >> "$BENCH_LOGFILE_FINAL"
