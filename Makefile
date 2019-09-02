@@ -1,10 +1,5 @@
 SHELL:=/bin/bash
 
-R_HOME=$(shell dirname $$(dirname $$(type -p R)))
-R_VERSION=
-debug:
-	@echo R_HOME=$(R_HOME)
-
 .PHONY: test
 
 test-files: test-files/R-2.0.0.tar.gz
@@ -18,7 +13,12 @@ test-files/R-2.0.0.tar.gz:
 test-files/R-3.6.1.tar.gz:
 	cd $(@D);\
 	curl -O https://cloud.r-project.org/src/base/R-3/R-3.6.1.tar.gz
+
 check:
 	shellcheck utils/*.sh
 	shellcheck -x cron-scripts/*.sh
 	shellcheck -x bench-scripts/*.sh
+
+test: test-files/R-2.0.0.tar.gz
+	TEST_DRIVE=$(PWD) BENCH_HOME=$(PWD) bench-scripts/bench-files-tarball.sh
+

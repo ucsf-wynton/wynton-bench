@@ -62,7 +62,7 @@ bench cp "$tarball" "$tmpdir"
 # Benchmark remove tarball from current drive, e.g. rm /scratch
 bench rm -- "$tarball"
 
-# Benchmark untaring to current drive, e.g. /tmp/a.tar.gz -> /scratch
+# Benchmark untar:ing to current drive, e.g. /tmp/a.tar.gz -> /scratch
 bench tar zxf "$tmpdir/$tarball" -C .
 
 # Benchmark ls -lR on current drive
@@ -77,9 +77,15 @@ bench du -sb R-2.0.0/ > /dev/null
 # Benchmark changing file permissions recursively on current drive
 bench chmod -R o-r R-2.0.0/
 
-# Benchmark taring from current drive, e.g. /scratch -> /tmp/a.tar
+# Benchmark tar:ing from current drive, e.g. /scratch -> /tmp/a.tar
 bench tar cf "$tmpdir/foo.tar" R-2.0.0
 rm -- "$tmpdir/foo.tar"  ## Not needed anymore
+
+# Benchmark tar:ing on current drive, e.g. /scratch -> /scratch/a.tar
+bench tar cf "foo.tar" R-2.0.0
+
+# Benchmark gzip:ing on current drive, e.g. /scratch -> /scratch/
+bench gzip "foo.tar"
 
 # Benchmark removing folder on current drive
 bench rm -rf R-2.0.0/
