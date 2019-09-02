@@ -103,3 +103,5 @@ rm -rf -- "$tmpdir"
 
 # Append all collected output
 cat "$BENCH_LOGFILE" >> "$BENCH_LOGFILE_FINAL"
+rm -- "$BENCH_LOGFILE"
+
