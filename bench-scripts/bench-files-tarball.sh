@@ -45,6 +45,9 @@ tmpdir=$(mktemp --tmpdir="$RAMTMPDIR" --directory .bench.XXXXXX)
 workdir=$(mktemp --tmpdir="$PWD" --directory .bench.XXXXXX)
 chdir "$workdir"
 
+# Record start time
+t_begin=$(date "+%s%N")
+
 # Record session info
 bench echo "HOSTNAME=$HOSTNAME" > /dev/null
 bench echo "uptime=$(uptime)" > /dev/null
@@ -95,6 +98,13 @@ bench gzip "foo.tar"
 
 # Benchmark removing folder on current drive
 bench rm -rf R-2.0.0/
+
+# Record end time
+t_end=$(date "+%s%N")
+
+# Output total benchmakr time (in seconds)
+t_delta=$(bc <<<"scale=3; ($t_end - $t_begin) / 1000000000")
+bench echo "total_time=$t_delta seconds" > /dev/null
 
 # Cleanup
 chdir "$opwd"
