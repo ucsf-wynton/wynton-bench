@@ -1,0 +1,10 @@
+Package: wyntonbench
+====================
+
+Version: 0.0.0-9000 [2019-09-06]
+
+NEW FEATURES:
+
+ * Added read_all_bench_logs().
+
+ * Added read_bench_logs().

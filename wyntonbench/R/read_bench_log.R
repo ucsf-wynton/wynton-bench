@@ -16,7 +16,7 @@
 read_bench_log <- function(file, n_max = +Inf) {
   col_types <- cols(
     .default    = col_double(),
-    start        = col_datetime(format = ""),
+    start        = col_datetime(format=""),
     id           = col_character(),
     hostname     = col_character(),
     ru_wallclock = col_double(),
@@ -39,7 +39,7 @@ read_bench_log <- function(file, n_max = +Inf) {
     command      = col_character()
   )
   col_names <- setdiff(names(col_types$cols), ".default")
-  data <- read_tsv(file, col_names = col_names, col_types = col_types)
+  data <- read_tsv(file, col_names=col_names, col_types=col_types, n_max=n_max)
   data$cpu_load <- as.numeric(sub("%", "", data$cpu_load)) / 100
   data
 }
