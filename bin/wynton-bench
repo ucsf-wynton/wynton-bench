@@ -1,0 +1,41 @@
+#! /usr/bin/env bash
+# Suggests:
+# * spark: https://github.com/holman/spark
+
+error() {
+    >&2 echo "ERROR: $*"
+    exit 1
+}
+
+chdir() {
+    cd "$1" || error "Failed to change directory: $1"
+}
+
+BENCH_DATA_ROOT=${BENCH_DATA_ROOT:-~/wynton-bench-logs}
+HOSTNAME=${HOSTNAME:-qb3-dev3}
+
+[[ -d "$BENCH_DATA_ROOT" ]] || error "No such folder: ${BENCH_DATA_ROOT}"
+[[ -n "$HOSTNAME" ]] || error "HOSTNAME is empty"
+
+format=${FORMAT:-spark}
+reverse=true
+width=$(tput cols)
+n=$((width-1))
+
+TEST_DRIVE=wynton_scratch
+
+## Load signals
+signals=($(tail -n 2000 "${BENCH_DATA_ROOT}/${HOSTNAME}/bench-files-tarball__${TEST_DRIVE}.log" | grep -F "total_time" | sed -E 's/(.compbio.ucsf.edu|echo total_time=| seconds|-07:00)//g' | cut -d $'\t' -f 21))
+signals=(${signals[@]:0:$n})
+$reverse && signals=($(printf '%s\n' "${signals[@]}" | tac | tr '\n' ' '))
+
+if [[ "$format" == "int" ]]; then
+  printf "%0.f " "${signals[@]}"
+elif [[ "$format" == "dbl" ]]; then
+  echo "${signals[@]}"
+elif [[ "$format" == "spark" ]]; then
+  ~/bin/spark "20 ${signals[@]}"
+fi
+
+printf "^now%*s%s\n" "$((${#signals[@]}-3))" "past^"
+
