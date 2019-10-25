@@ -8,7 +8,7 @@ NEW FEATURES:
  * Add import_bench_logs(), trim_bench_log(), extract_bench_log(),
    split_bench_log().
  
- * Add gg_uptime().
+ * Add gg_uptime(), gg_total_time().
 
 
 Version: 0.0.0-9000 [2019-09-06]
