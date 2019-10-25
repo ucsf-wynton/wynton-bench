@@ -49,7 +49,9 @@ read_bench_log <- function(pathname, ...) {
   ## Sanity checks
   stopifnot(any(duplicated(data$id)))
   stopifnot(any(duplicated(data$hostname)))
-  stopifnot(any(duplicated(data$test_drive)))
+  stopifnot(any(duplicated(data$drive)))
+
+  class(data) <- c("bench_log", class(data))
   
   data
 } ## read_bench_log()
