@@ -1,10 +1,20 @@
 Package: wyntonbench
 ====================
 
+Version: 0.0.0-9001 [2019-10-25]
+
+NEW FEATURES:
+
+ * Add import_bench_logs(), trim_bench_log(), extract_bench_log(),
+   split_bench_log().
+ 
+ * Add gg_uptime().
+
+
 Version: 0.0.0-9000 [2019-09-06]
 
 NEW FEATURES:
 
  * Added read_all_bench_logs().
 
- * Added read_bench_logs().
+ * Added read_bench_log().

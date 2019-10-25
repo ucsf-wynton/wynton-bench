@@ -1,45 +1,56 @@
-#' Read bench log files
+#' Reads a bench log file
 #'
-#' @param file The bench log file.
+#' @param pathname The pathname of the bench log file to read.
 #'
-#' @param n_max Maximum number of lines to read.
+#' @param \ldots Additional arguments passed to [readr::read_tsv].
 #'
-#' @return A tibble.
+#' @return A [tibble::tibble] data.frame of class `bench_log`.
 #'
-#' @examples
-#' file <- system.file("exdata", "ex-bench.log", package="wyntonbench")
-#' data <- read_bench_log(file)
-#' print(data)
-#'
-#' @importFrom readr read_tsv cols col_character col_double col_datetime col_integer
-#' @export
-read_bench_log <- function(file, n_max = +Inf) {
+#' @importFrom readr read_tsv cols col_double col_datetime col_character
+#' @importFrom tibble as_tibble
+read_bench_log <- function(pathname, ...) {
   col_types <- cols(
-    .default    = col_double(),
-    start        = col_datetime(format=""),
-    id           = col_character(),
-    hostname     = col_character(),
-    ru_wallclock = col_double(),
-    ru_stime     = col_double(),
-    ru_utime     = col_double(),
-    cpu_load     = col_character(), ## actually 'cpu_pct'
-    ru_nvcsw     = col_integer(),
-    ru_nivcsw    = col_integer(),
-    ru_inblock   = col_integer(),
-    ru_oublock   = col_integer(),
-    ru_msgrcv    = col_integer(),
-    ru_msgsnd    = col_integer(),
-    ru_nsignals  = col_integer(),
-    ru_maxrss    = col_integer(),
-    ru_avgrss    = col_integer(),
-    ru_nswap     = col_integer(),
-    ru_majflt    = col_integer(),
-    ru_minflt    = col_integer(),
-    exit_status  = col_integer(),
-    command      = col_character()
+    .default  = col_double(),
+    timestamp = col_datetime(format = ""),
+    id        = col_character(),
+    hostname  = col_character(),
+    cpu_pct   = col_character(),
+    command   = col_character()
   )
-  col_names <- setdiff(names(col_types$cols), ".default")
-  data <- read_tsv(file, col_names=col_names, col_types=col_types, n_max=n_max)
-  data$cpu_load <- as.numeric(sub("%", "", data$cpu_load)) / 100
+  
+  col_names <- c("timestamp", "id", "hostname", "ru_wallclock", "ru_stime", "ru_utime", "cpu_pct", "ru_nvcsw", "ru_invcsw", "ru_inblock", "ru_outblock", "ru_msgrcv", "ru_msgsnd", "ru_nsignals", "ru_maxrss", "ru_avgrss", "ru_nswap", "ru_majflt", "ru_minflt", "exit_status", "command")
+
+  data <- read_tsv(pathname, col_types=col_types, col_names=col_names, ...)
+  colnames(data) <- col_names
+
+  ## Drop non-informative columns which are always reported with zeros
+  drop <- c("ru_msgrcv", "ru_msgsnd", "ru_nsignals", "ru_avgrss", "ru_nswap", "ru_majflt")
+  data <- data[!colnames(data) %in% drop]
+
+  data$cpu_pct <- as.numeric(sub("%$", "", data$cpu_pct)) / 100
+
+  ## Add column 'pwd'
+  pwd <- grep("PWD=", data$command, value=TRUE)
+  pwd <- gsub("^.* PWD=", "", pwd)
+  pwd <- dirname(pwd)
+  pwd <- unique(pwd)
+  stopifnot(length(pwd) == 1L)
+
+  ## Add column 'drive'
+  drive <- grep("TEST_DRIVE=", data$command, value=TRUE)
+  drive <- gsub("^.* TEST_DRIVE=", "", drive)
+  drive <- unique(drive)
+  stopifnot(length(drive) == 1L)
+
+  data <- cbind(data[,1:3], drive=drive, data[,-(1:3)])
+  data <- as_tibble(data)
+
+  ## Sanity checks
+  stopifnot(any(duplicated(data$id)))
+  stopifnot(any(duplicated(data$hostname)))
+  stopifnot(any(duplicated(data$drive)))
+
+  class(data) <- c("bench_log", class(data))
+  
   data
-}
+} ## read_bench_log()

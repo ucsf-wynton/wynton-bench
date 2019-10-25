@@ -12,6 +12,9 @@
 #'
 #' @export
 extract_bench_log <- function(logs, what = c("uptime", "cp-file-source-to-ram", "cp-file-ram-to-drive", "cp-file-drive-to-ram", "rm-file-drive", "untar-ram-to-drive", "ls-recursive-drive", "find-drive", "du-drive", "chmod-recursive--drive", "tar-drive-to-ram", "tar-drive-to-drive", "gzip-drive-to-drive", "rm-folder-drive", "total-time"), parse = TRUE) {
+  ## To please R CMD check
+  command <- NULL
+  
   stopifnot(is.data.frame(logs), inherits(logs, "bench_log"))
   what <- match.arg(what)
   if (what == "uptime") {

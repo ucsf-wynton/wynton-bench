@@ -24,8 +24,8 @@ split_bench_log <- function(logs, whats=eval(formals(extract_bench_log)$what), p
   whats <- match.arg(whats, choices=known_whats, several.ok=TRUE)
 
   pathnames <- sprintf("%s.bench_log.rds", whats)
-  names(pathnames) <- whats
   if (!is.null(prefix)) pathnames <- paste0(prefix, pathnames)
+  names(pathnames) <- whats
   
   for (kk in seq_along(whats)) {
     what <- whats[kk]
