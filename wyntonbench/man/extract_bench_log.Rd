@@ -4,11 +4,11 @@
 \alias{extract_bench_log}
 \title{Extract bench-log entries of a certain type}
 \usage{
-extract_bench_log(logs, what = c("uptime", "cp-file-source-to-ram",
-  "cp-file-ram-to-drive", "cp-file-drive-to-ram", "rm-file-drive",
-  "untar-ram-to-drive", "ls-recursive-drive", "find-drive", "du-drive",
-  "chmod-recursive-drive", "tar-drive-to-ram", "tar-drive-to-drive",
-  "gzip-drive-to-drive", "rm-folder-drive", "total-time"), parse = TRUE)
+extract_bench_log(logs, what = c("uptime", "cp_file_source_to_ram",
+  "cp_file_ram_to_drive", "cp_file_drive_to_ram", "rm_file_drive",
+  "untar_ram_to_drive", "ls_recursive_drive", "find_drive", "du_drive",
+  "chmod_recursive_drive", "tar_drive_to_ram", "tar_drive_to_drive",
+  "gzip_drive_to_drive", "rm_folder_drive", "total_time"), parse = TRUE)
 }
 \arguments{
 \item{logs}{A bench_log data.frame}
@@ -17,7 +17,7 @@ extract_bench_log(logs, what = c("uptime", "cp-file-source-to-ram",
 
 \item{parse}{If TRUE, the `command` column of the extract entries
 is parsed and the parsed valus are appended as new columns.
-This applies only to `uptime` and `total-time`.}
+This applies only to `uptime` and `total_time`.}
 }
 \value{
 A [tibble::tibble] data.frame
