@@ -17,15 +17,19 @@ HOSTNAME=${HOSTNAME:-qb3-dev3}
 [[ -d "$BENCH_DATA_ROOT" ]] || error "No such folder: ${BENCH_DATA_ROOT}"
 [[ -n "$HOSTNAME" ]] || error "HOSTNAME is empty"
 
+BENCH_DATA_PATH=${BENCH_DATA_ROOT}/${HOSTNAME}
+[[ -d "$BENCH_DATA_PATH" ]] || exit 0
+
 format=${FORMAT:-spark}
-reverse=true
+reverse=false
 width=$(tput cols)
+
+TEST_DRIVE=${TEST_DRIVE:-wynton_scratch}
+LABEL=${LABEL:-/${TEST_DRIVE//_/\/}}
 n=$((width-1))
 
-TEST_DRIVE=wynton_scratch
-
 ## Load signals
-signals=($(tail -n 2000 "${BENCH_DATA_ROOT}/${HOSTNAME}/bench-files-tarball__${TEST_DRIVE}.log" | grep -F "total_time" | sed -E 's/(.compbio.ucsf.edu|echo total_time=| seconds|-07:00)//g' | cut -d $'\t' -f 21))
+signals=($(tail -n 2000 "$BENCH_DATA_PATH/bench-files-tarball__${TEST_DRIVE}.log" | grep -F "total_time" | sed -E 's/(.compbio.ucsf.edu|echo total_time=| seconds|-07:00)//g' | cut -d $'\t' -f 21))
 signals=(${signals[@]:0:$n})
 $reverse && signals=($(printf '%s\n' "${signals[@]}" | tac | tr '\n' ' '))
 
@@ -34,8 +38,15 @@ if [[ "$format" == "int" ]]; then
 elif [[ "$format" == "dbl" ]]; then
   echo "${signals[@]}"
 elif [[ "$format" == "spark" ]]; then
-  ~/bin/spark "20 ${signals[@]}"
+  ~/bin/spark "200 ${signals[@]}"
 fi
 
-printf "^now%*s%s\n" "$((${#signals[@]}-3))" "past^"
+pad=$(((${#signals[@]}-8-2-${#LABEL})/2))
+#echo "signals=${#signals[@]}"
+#echo "pad=$pad"
+if $reverse; then
+    printf "^now%*s[%s]%*s%s\n" "$pad" "" "$LABEL" "$pad" "" "past^"
+else    
+    printf "^past%*s[%s]%*s%s\n" "$pad" "" "$LABEL" "$pad" "" "now^"
+fi    
 
