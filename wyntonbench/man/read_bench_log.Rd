@@ -2,24 +2,18 @@
 % Please edit documentation in R/read_bench_log.R
 \name{read_bench_log}
 \alias{read_bench_log}
-\title{Read bench log files}
+\title{Reads a bench log file}
 \usage{
-read_bench_log(file, n_max = +Inf)
+read_bench_log(pathname, ...)
 }
 \arguments{
-\item{file}{The bench log file.}
+\item{pathname}{The pathname of the bench log file to read.}
 
-\item{n_max}{Maximum number of lines to read.}
+\item{\ldots}{Additional arguments passed to [readr::read_tsv].}
 }
 \value{
-A tibble.
+A [tibble::tibble] data.frame of class `bench_log`.
 }
 \description{
-Read bench log files
-}
-\examples{
-file <- system.file("exdata", "ex-bench.log", package="wyntonbench")
-data <- read_bench_log(file)
-print(data)
-
+Reads a bench log file
 }

@@ -1,7 +1,12 @@
 Package: wyntonbench
 Version: 0.0.0-9000
 Imports:
-    readr
+    dplyr,
+    ggplot2,
+    readr,
+    tibble,
+    tidyr,
+    utils
 Title: Wynton Benchmark
 Authors@R: c(person("Henrik", "Bengtsson", role=c("aut", "cre", "cph"),
                                           email = "henrikb@braju.com"))
