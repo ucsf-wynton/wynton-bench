@@ -28,7 +28,7 @@ TEST_DRIVE=${TEST_DRIVE:-wynton_scratch}
 n=$((width-1))
 
 ## Load signals
-bench_logs=$(tail -n 2000 "$BENCH_DATA_PATH/bench-files-tarball__${TEST_DRIVE}.log")
+bench_logs=$(tail -n 2100 "$BENCH_DATA_PATH/bench-files-tarball__${TEST_DRIVE}.log")
 total_time_entries=$(echo "${bench_logs}" | grep -F "total_time" | sed -E 's/(.compbio.ucsf.edu|echo total_time=| seconds|-07:00)//g')
 times=$(echo "${total_time_entries}" | cut -d $'\t' -f 1 | sed -E 's/-[0-9]{2}:[0-9]{2}$//g')
 date=($(echo "${times}" | cut -d ' ' -f 1))
@@ -41,8 +41,9 @@ signals=($(echo "${total_time_entries}" | cut -d $'\t' -f 21))
 signals=(${signals[@]:0:$n})
 $reverse && signals=($(printf '%s\n' "${signals[@]}" | tac | tr '\n' ' '))
 
-range=($(echo "${signals[@]}" | awk '{ min=1e12; max=-1e12; sum=0; for (v=1; v<=NF; v++) { min=(min<$v?min:$v); max=(max>$v?max:$v); sum+=$v }; print min, max, sum/NF; }'))
 
+range=($(echo "${signals[@]}" | awk '{ count[NR] = $1; asort(count); min=1e12; max=-1e12; sum=0; for (v=1; v<=NF; v++) { min=(min<$v?min:$v); max=(max>$v?max:$v); sum+=$v }; if (NR % 2) { median = count[(NR + 1) / 2]; } else { median = (count[(NR / 2)] + count[(NR / 2) + 1]) / 2.0; } } END { print min, max, sum/NF, median; }'
+))
 if [[ "$format" == "int" ]]; then
   data=$(printf "%0.f " "${signals[@]}")
 elif [[ "$format" == "dbl" ]]; then
@@ -61,7 +62,7 @@ if [[ "${date[-1]}" != "$today" ]]; then
     period="$date $period"
 fi    
 label=${LABEL:-" [${TEST_DRIVE//_//}] "}
-range=$(printf " ~%.2gs [%.2gs,%.2gs]" "${range[2]}" "${range[0]}" "${range[1]}")
+range=$(printf " ~%.3gs [%.3gs,%.3gs]" "${range[3]}" "${range[0]}" "${range[1]}")
 pad=$((${#data}-1 - ${#period} - ${#label} - ${#range}))
 padL=$((${pad}/2))
 padR=$((${pad} - ${padL}))
