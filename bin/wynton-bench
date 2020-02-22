@@ -11,7 +11,8 @@ chdir() {
     cd "$1" || error "Failed to change directory: $1"
 }
 
-BENCH_DATA_ROOT=${BENCH_DATA_ROOT:-~/wynton-bench-logs}
+SPARK_HOME=${SPARK_HOME:-~hb}
+BENCH_DATA_ROOT=${BENCH_DATA_ROOT:-~hb/wynton-bench-logs}
 HOSTNAME=${HOSTNAME:-qb3-dev3}
 
 [[ -d "$BENCH_DATA_ROOT" ]] || error "No such folder: ${BENCH_DATA_ROOT}"
@@ -49,7 +50,7 @@ if [[ "$format" == "int" ]]; then
 elif [[ "$format" == "dbl" ]]; then
   data=$(echo "${signals[@]}")
 elif [[ "$format" == "spark" ]]; then
-  data=$(~/bin/spark "100 ${signals[@]}")
+  data=$(${SPARK_HOME}/bin/spark "100 ${signals[@]}")
 fi
 
 
