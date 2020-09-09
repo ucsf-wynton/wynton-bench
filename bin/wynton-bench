@@ -63,7 +63,7 @@ if [[ "${date[-1]}" != "$today" ]]; then
     period="$date $period"
 fi    
 label=${LABEL:-" [/${TEST_DRIVE//_//}] "}
-range=$(printf " ~%.3gs [%.3gs,%.3gs]" "${range[3]}" "${range[0]}" "${range[1]}")
+range=$(printf " ~%.1fs [%.1fs,%.1fs]" "${range[3]}" "${range[0]}" "${range[1]}")
 pad=$((${#data}-1 - ${#period} - ${#label} - ${#range}))
 padL=$((${pad}/2))
 padR=$((${pad} - ${padL}))
