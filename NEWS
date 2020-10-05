@@ -1,6 +1,13 @@
 wynton-bench
 ============
 
+Version 0.0.0-9001 (2020-10-04)
+
+NEW FEATURES:
+
+ * wynton-bench is now a proper executable tool with options and help.
+ 
+
 Version 0.0.0-9000 (2019-08-29)
 
 NEW FEATURES:
