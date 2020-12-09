@@ -9,6 +9,10 @@ chdir() {
     cd "$1" || error "Failed to change directory: $1"
 }
 
+makedir() {
+    mkdir -p "$1" || error "Failed to create directory: $1"
+}
+
 [[ -z "$BENCH_HOME" ]] && error "'BENCH_HOME' not set or empty"
 [[ -d "$BENCH_HOME" ]] || error "'BENCH_HOME' is not a directory: $BENCH_HOME"
 
@@ -17,32 +21,34 @@ chdir() {
 . "$BENCH_HOME/utils/bench.sh"
 
 BENCH_LOGPATH=${BENCH_LOGPATH:-${PWD}}
-mkdir -p "$BENCH_LOGPATH"
+makedir "$BENCH_LOGPATH"
 
 RAMTMPDIR=${RAMTMPDIR:-/tmp}
+makedir "$RAMTMPDIR"
 
 [[ -z "$TEST_DRIVE" ]] && error "'TEST_DRIVE' not set or empty"
 
 BENCH_LOGNAME=${BENCH_LOGNAME:-"bench-files-tarball_${TEST_DRIVE//\//_}.log"}
 BENCH_LOGFILE=${BENCH_LOGFILE:-"$BENCH_LOGPATH/$BENCH_LOGNAME"}
-echo "BENCH_LOGFILE:"
-echo "$BENCH_LOGFILE"
+echo "BENCH_LOGFILE: '$BENCH_LOGFILE'"
 
 ## Append to log file atomically
 BENCH_LOGFILE_FINAL=$BENCH_LOGFILE
 BENCH_LOGFILE=$(mktemp --tmpdir="$RAMTMPDIR" BENCH_LOGFILE.XXXXXX)
-echo "BENCH_LOGFILE (temporary):"
-echo "$BENCH_LOGFILE"
+echo "BENCH_LOGFILE (temporary): '$BENCH_LOGFILE'"
 
 opwd=$PWD
 chdir "$TEST_DRIVE"
 
+makedir "$PWD/.wynton-bench"
+makedir "$RAMTMPDIR/.wynton-bench"
+
 # Create temporary working directory on drive reciding in memory,
 # which typically is /tmp
-tmpdir=$(mktemp --tmpdir="$RAMTMPDIR" --directory .bench.XXXXXX)
+tmpdir=$(mktemp --tmpdir="$RAMTMPDIR/.wynton-bench" --directory .bench.XXXXXX)
 
 # Create temporary working directory on current drive
-workdir=$(mktemp --tmpdir="$PWD" --directory .bench.XXXXXX)
+workdir=$(mktemp --tmpdir="$PWD/.wynton-bench" --directory .bench.XXXXXX)
 chdir "$workdir"
 
 # Record start time
@@ -110,6 +116,10 @@ bench echo "total_time=$t_delta seconds" > /dev/null
 chdir "$opwd"
 rm -rf -- "$workdir"
 rm -rf -- "$tmpdir"
+
+## If possible, remove also .wynton-bench/ folders
+rmdir "$PWD/.wynton-bench" 2> /dev/null
+rmdir "$RAMTMPDIR/.wynton-bench" 2> /dev/null
 
 # Append all collected output
 cat "$BENCH_LOGFILE" >> "$BENCH_LOGFILE_FINAL"

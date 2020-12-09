@@ -1,6 +1,14 @@
 wynton-bench
 ============
 
+Version 0.0.0-9002 (2020-12-08)
+
+NEW FEATURES:
+
+ * The benchmarking script now uses a common subfolder .wynton-bench/ for
+   all of the individual, random test folders.  This was done in order to
+   avoid clutter in the target folder tested, e.g. $HOME.
+
 Version 0.0.0-9001 (2020-10-04)
 
 NEW FEATURES:
