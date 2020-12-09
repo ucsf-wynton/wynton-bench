@@ -20,7 +20,7 @@ makedir() {
 # shellcheck disable=SC1090
 . "$BENCH_HOME/utils/bench.sh"
 
-BENCH_LOGPATH=${BENCH_LOGPATH:-${PWD}}
+BENCH_LOGPATH=${BENCH_LOGPATH:-"${PWD}/.wynton-bench"}
 makedir "$BENCH_LOGPATH"
 
 RAMTMPDIR=${RAMTMPDIR:-/tmp}
