@@ -67,6 +67,7 @@ bench() {
     BENCH_ID=${BENCH_ID:-${BENCH_LOGFILE##*.}}
 
     { printf "%s\t%s\t%s\t" "$(date --rfc-3339=seconds)" "$BENCH_ID" "$HOSTNAME"; } >> "$outfile"
+    # shellcheck disable=SC2086
     "$BENCH_TIME" --output="$outfile" --append $BENCH_TIME_OPTS --format "$BENCH_FORMAT" "$@"
 
     if [[ -n "$BENCH_LOGFILE" ]]; then
