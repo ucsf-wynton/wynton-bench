@@ -36,6 +36,9 @@ function mdebug() {
         mecho "[DEBUG] $*";
     fi
 }
+function mwarn() {
+    mecho "WARNING: $*";
+}
 function merror() {
     mecho "ERROR: $*";
     exit 1
@@ -136,6 +139,8 @@ BENCH_DATA_PATH=${BENCH_DATA_ROOT}/${hostname}
 
 
 case "$drive" in
+    /tmp)
+         TEST_DRIVE=tmp_hb ;;
     /scratch)
          TEST_DRIVE=scratch_hb ;;
     /wynton/scratch)
@@ -145,7 +150,9 @@ case "$drive" in
     /wynton/group)
          TEST_DRIVE=wynton_group_cbi_hb ;;
     *)
-        merror "Unknown drive: ${drive}" ;;
+        TEST_DRIVE="${drive/\//}";
+        TEST_DRIVE="${TEST_DRIVE//\//_}";
+        mwarn "Unknown drive '${drive}' - will try with TEST_DRIVE='$TEST_DRIVE'" ;;
 esac
 
 if [[ $action == "timeline" ]]; then
