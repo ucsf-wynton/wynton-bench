@@ -117,10 +117,6 @@ chdir "$opwd"
 rm -rf -- "$workdir"
 rm -rf -- "$tmpdir"
 
-## If possible, remove also .wynton-bench/ folders
-rmdir "$PWD/.wynton-bench" 2> /dev/null
-rmdir "$RAMTMPDIR/.wynton-bench" 2> /dev/null
-
 # Append all collected output
 cat "$BENCH_LOGFILE" >> "$BENCH_LOGFILE_FINAL"
 rm -- "$BENCH_LOGFILE"
