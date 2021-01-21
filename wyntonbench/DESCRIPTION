@@ -15,4 +15,4 @@ License: LGPL (>= 3.0)
 LazyLoad: TRUE
 URL: https://github.com/UCSF-HPC/wynton-bench
 BugReports: https://github.com/UCSF-HPC/wynton-bench/issues
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1

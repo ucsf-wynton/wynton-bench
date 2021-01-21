@@ -4,8 +4,14 @@
 \alias{split_bench_log}
 \title{Split up a bench log by entry type and saved to individual files}
 \usage{
-split_bench_log(logs, whats = eval(formals(extract_bench_log)$what),
-  prefix = NULL, parse = TRUE, skip = TRUE, verbose = TRUE)
+split_bench_log(
+  logs,
+  whats = eval(formals(extract_bench_log)$what),
+  prefix = NULL,
+  parse = TRUE,
+  skip = TRUE,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{logs}{A bench_log data.frame}

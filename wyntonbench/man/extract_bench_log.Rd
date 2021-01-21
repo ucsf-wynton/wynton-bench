@@ -4,11 +4,14 @@
 \alias{extract_bench_log}
 \title{Extract bench-log entries of a certain type}
 \usage{
-extract_bench_log(logs, what = c("uptime", "cp_file_source_to_ram",
-  "cp_file_ram_to_drive", "cp_file_drive_to_ram", "rm_file_drive",
-  "untar_ram_to_drive", "ls_recursive_drive", "find_drive", "du_drive",
-  "chmod_recursive_drive", "tar_drive_to_ram", "tar_drive_to_drive",
-  "gzip_drive_to_drive", "rm_folder_drive", "total_time"), parse = TRUE)
+extract_bench_log(
+  logs,
+  what = c("uptime", "cp_file_source_to_ram", "cp_file_ram_to_drive",
+    "cp_file_drive_to_ram", "rm_file_drive", "untar_ram_to_drive", "ls_recursive_drive",
+    "find_drive", "du_drive", "chmod_recursive_drive", "tar_drive_to_ram",
+    "tar_drive_to_drive", "gzip_drive_to_drive", "rm_folder_drive", "total_time"),
+  parse = TRUE
+)
 }
 \arguments{
 \item{logs}{A bench_log data.frame}

@@ -4,8 +4,7 @@
 \alias{import_bench_logs}
 \title{Import raw bench log files and save per hostname}
 \usage{
-import_bench_logs(root = "wynton-bench-logs", skip = TRUE,
-  verbose = FALSE)
+import_bench_logs(root = "wynton-bench-logs", skip = TRUE, verbose = FALSE)
 }
 \arguments{
 \item{root}{(character) A folder to be imported.}
