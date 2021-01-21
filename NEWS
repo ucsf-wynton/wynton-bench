@@ -1,6 +1,13 @@
 wynton-bench
 ============
 
+Version 0.0.0-9003 (2021-01-20)
+
+NEW FEATURES:
+
+ * Add options '--user <user>' and '--data-root <path>' to 'wynton-bench'.
+
+
 Version 0.0.0-9002 (2020-12-08)
 
 NEW FEATURES:
