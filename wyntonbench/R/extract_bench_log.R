@@ -5,10 +5,12 @@
 #' @param what Which type of entries to extract
 #'
 #' @param parse If TRUE, the `command` column of the extract entries
-#' is parsed and the parsed valus are appended as new columns.
+#' is parsed and the parsed values are appended as new columns.
 #' This applies only to `uptime` and `total_time`.
 #'
 #' @return A [tibble::tibble] data.frame
+#'
+#' @example incl/extract_bench_log.R
 #'
 #' @export
 extract_bench_log <- function(logs, what = c("uptime", "cp_file_source_to_ram", "cp_file_ram_to_drive", "cp_file_drive_to_ram", "rm_file_drive", "untar_ram_to_drive", "ls_recursive_drive", "find_drive", "du_drive", "chmod_recursive_drive", "tar_drive_to_ram", "tar_drive_to_drive", "gzip_drive_to_drive", "rm_folder_drive", "total_time"), parse = TRUE) {
