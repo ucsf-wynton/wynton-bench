@@ -1,6 +1,13 @@
 Package: wyntonbench
 ====================
 
+Version: 0.0.0-9002 [2021-01-20]
+
+DOCUMENTATION:
+
+ * Add example for extract_bench_log().
+
+
 Version: 0.0.0-9001 [2019-10-25]
 
 NEW FEATURES:
