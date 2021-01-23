@@ -16,30 +16,115 @@ extract_bench_log(
 \arguments{
 \item{logs}{A bench_log data.frame}
 
-\item{what}{Which type of entries to extract}
+\item{what}{Which type of benchmark to extract (see below).}
 
-\item{parse}{If TRUE, the `command` column of the extract entries
-is parsed and the parsed valus are appended as new columns.
-This applies only to `uptime` and `total_time`.}
+\item{parse}{If TRUE, the \code{command} column of the extract entries
+is parsed and the parsed values are appended as new columns.
+This applies only to \code{uptime} and \code{total_time}.}
 }
 \value{
-A [tibble::tibble] data.frame
+A \link[tibble:tibble]{tibble::tibble} data.frame with columns:
+\itemize{
+\item \code{timestamp}   (POSIXct): The time when the command was called
+\item \code{id}        (character): A unique identify for this command call
+\item \code{hostname}  (character): The hostname where this command was called
+\item \code{drive}     (character): The mount point on which the test was performed
+\item \code{ru_wallclock} (double):
+\item \code{ru_stime}     (double):
+\item \code{ru_utime}     (double):
+\item \code{cpu_pct}      (double):
+\item \code{ru_nvcsw}     (double):
+\item \code{ru_invcsw}    (double):
+\item \code{ru_inblock}   (double):
+\item \code{ru_outblock}  (double):
+\item \code{ru_maxrss}    (double):
+\item \code{ru_minflt}    (double):
+\item \code{exit_status}  (double): The exit code of the command called
+\item \code{command}   (character): The verbatim command called by this test
+}
 }
 \description{
 Extract bench-log entries of a certain type
 }
+\section{Available benchmarks and their corresponding commands}{
+\tabular{rll}{
+    \tab Benchmark \tab Command \cr
+   1 \tab \code{uptime} \tab \code{uptime} \cr
+   2 \tab \code{cp_file_source_to_ram} \tab \verb{cp $BENCH_SOURCE/R-2.0.0.tar.gz /tmp/} \cr
+   3 \tab \code{cp_file_ram_to_drive} \tab \verb{cp /tmp/R-2.0.0.tar.gz $BENCH_DRIVE/} \cr
+   4 \tab \code{cp_file_drive_to_ram} \tab \verb{cp $BENCH_DRIVE/R-2.0.0.tar.gz /tmp/} \cr
+   5 \tab \code{rm_file_drive} \tab \verb{rm $BENCH_DRIVE/R-2.0.0.tar.gz} \cr
+   6 \tab \code{untar_ram_to_drive} \tab \verb{tar zxf /tmp/R-2.0.0.tar.gz -C $BENCH_DRIVE/} \cr
+   7 \tab \code{ls_recursive_drive} \tab \verb{ls -lR $BENCH_DRIVE/R-2.0.0/src/library/} \cr
+   8 \tab \code{find_drive} \tab \verb{find $BENCH_DRIVE/R-2.0.0/ -type f -name Rconnections.h} \cr
+   9 \tab \code{du_drive} \tab \verb{du -sb $BENCH_DRIVE/R-2.0.0/} \cr
+   10 \tab \code{chmod_recursive_drive} \tab \verb{chmod -R o-r $BENCH_DRIVE/R-2.0.0/} \cr
+   11 \tab \code{tar_drive_to_ram} \tab \verb{tar cf /tmp/foo.tar $BENCH_DRIVE/R-2.0.0/} \cr
+   12 \tab \code{tar_drive_to_drive} \tab \verb{tar cf $BENCH_DRIVE/foo.tar $BENCH_DRIVE/R-2.0.0/} \cr
+   13 \tab \code{gzip_drive_to_drive} \tab \code{gzip $BENCH_DRIVE/foo.tar} \cr
+   14 \tab \code{rm_folder_drive} \tab \verb{rm -rf $BENCH_DRIVE/R-2.0.0/} \cr
+   15 \tab \code{total_time} \tab Total time for all of the above steps \cr
+}
+}
+
+\section{How the raw data is produced}{
+
+These data are produced using the \file{utils/bench.sh} script that
+benchmarks the called command using something like:\if{html}{\out{<div class="sh">}}\preformatted{$(type -P time) --format="\%e\\t\%S\\t\%U\\t\%P\\t\%w\\t\%c\\t\%I\\t\%O\\t\%r\\t\%s\\t\%k\\t\%M\\t\%t\\t\%W\\t\%F\\t\%R\\t\%x\\t\%C" <command>
+}\if{html}{\out{</div>}}
+}
+
 \examples{
 path <- system.file(package = "wyntonbench", "exdata", mustWork = TRUE)
 
 ## Read *all* raw bench log files
 raw <- read_all_bench_logs(path)
-trimmed <- trim_bench_log(raw)
-print(trimmed)
 
-## Extract a few types of stats
-stats <- extract_bench_log(trimmed, what = "cp_file_source_to_ram")
-print(stats)
+## Drop all 'echo' entries
+raw <- trim_bench_log(raw)
+print(raw)
 
-stats <- extract_bench_log(trimmed, what = "untar_ram_to_drive")
+## Focus on benchmark drive /scratch
+raw <- subset(raw, drive == "/scratch")
+
+## Get benchmarks for untar:ing a file to the benchmark drive
+stats <- extract_bench_log(raw, what = "untar_ram_to_drive")
 print(stats)
+# # A tibble: 11 x 16
+#    timestamp           id      hostname drive    ru_wallclock ru_stime ru_utime
+#    <dttm>              <chr>   <chr>    <chr>           <dbl>    <dbl>    <dbl>
+#  1 2019-09-03 15:53:04 2K02... qb3-dev3 /scratch         0.41     0.26     0.36
+#  2 2019-09-03 16:03:04 80E0... qb3-dev3 /scratch         0.41     0.24     0.35
+#  3 2019-09-03 16:13:04 wk1u... qb3-dev3 /scratch         0.37     0.24     0.32
+#  4 2019-09-03 16:23:03 GPHl... qb3-dev3 /scratch         0.41     0.26     0.35
+#  5 2019-09-03 16:33:04 Ftys... qb3-dev3 /scratch         0.41     0.27     0.35
+#  6 2019-09-03 16:43:04 tcrr... qb3-dev3 /scratch         0.4      0.25     0.35
+#  7 2019-09-03 16:53:03 3cZH... qb3-dev3 /scratch         0.37     0.22     0.33
+#  8 2019-09-03 17:03:04 LFh5... qb3-dev3 /scratch         0.4      0.26     0.35
+#  9 2019-09-03 17:13:03 a4zi... qb3-dev3 /scratch         0.41     0.26     0.35
+# 10 2019-09-03 17:23:04 sdlt... qb3-dev3 /scratch         0.39     0.25     0.34
+# 11 2019-09-03 17:33:04 1kp4... qb3-dev3 /scratch         0.41     0.26     0.35
+# # ... with 9 more variables: cpu_pct <dbl>, ru_nvcsw <dbl>, ru_invcsw <dbl>,
+# #     ru_inblock <dbl>, ru_outblock <dbl>, ru_maxrss <dbl>, ru_minflt <dbl>,
+# #     exit_status <dbl>, command <chr>
+
+## The first benchmark entry
+str(stats[1,])
+# tibble [1 x 16] (S3: bench_log/tbl_df/tbl/data.frame)
+#  $ timestamp   : POSIXct[1:1], format: "2019-09-03 15:53:04"
+#  $ id          : chr "2K0293"
+#  $ hostname    : chr "qb3-dev3"
+#  $ drive       : chr "/scratch"
+#  $ ru_wallclock: num 0.41
+#  $ ru_stime    : num 0.26
+#  $ ru_utime    : num 0.36
+#  $ cpu_pct     : num 1.51
+#  $ ru_nvcsw    : num 1041
+#  $ ru_invcsw   : num 8
+#  $ ru_inblock  : num 0
+#  $ ru_outblock : num 76408
+#  $ ru_maxrss   : num 1180
+#  $ ru_minflt   : num 697
+#  $ exit_status : num 0
+#  $ command     : chr "tar zxf /tmp/.bench.ca1noS/R-2.0.0.tar.gz -C ."
 }

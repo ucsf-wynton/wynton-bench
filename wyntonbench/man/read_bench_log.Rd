@@ -9,10 +9,10 @@ read_bench_log(pathname, ...)
 \arguments{
 \item{pathname}{The pathname of the bench log file to read.}
 
-\item{\ldots}{Additional arguments passed to [readr::read_tsv].}
+\item{\ldots}{Additional arguments passed to \link[readr:read_delim]{readr::read_tsv}.}
 }
 \value{
-A [tibble::tibble] data.frame of class `bench_log`.
+A \link[tibble:tibble]{tibble::tibble} data.frame of class \code{bench_log}.
 }
 \description{
 Reads a bench log file

@@ -2,13 +2,59 @@
 #'
 #' @param logs A bench_log data.frame
 #'
-#' @param what Which type of entries to extract
+#' @param what Which type of benchmark to extract (see below).
 #'
 #' @param parse If TRUE, the `command` column of the extract entries
 #' is parsed and the parsed values are appended as new columns.
 #' This applies only to `uptime` and `total_time`.
 #'
-#' @return A [tibble::tibble] data.frame
+#' @return A [tibble::tibble] data.frame with columns:
+#'
+#'  * `timestamp`   (POSIXct): The time when the command was called
+#'  * `id`        (character): A unique identify for this command call
+#'  * `hostname`  (character): The hostname where this command was called
+#'  * `drive`     (character): The mount point on which the test was performed
+#'  * `ru_wallclock` (double): 
+#'  * `ru_stime`     (double): 
+#'  * `ru_utime`     (double): 
+#'  * `cpu_pct`      (double): 
+#'  * `ru_nvcsw`     (double): 
+#'  * `ru_invcsw`    (double): 
+#'  * `ru_inblock`   (double): 
+#'  * `ru_outblock`  (double): 
+#'  * `ru_maxrss`    (double): 
+#'  * `ru_minflt`    (double): 
+#'  * `exit_status`  (double): The exit code of the command called
+#'  * `command`   (character): The verbatim command called by this test
+#'
+#' @section Available benchmarks and their corresponding commands:
+#'
+#' |    | Benchmark               | Command                                                   |
+#' |---:|:------------------------|:----------------------------------------------------------|
+#' |  1 | `uptime`                | `uptime`                                                  |
+#' |  2 | `cp_file_source_to_ram` | `cp $BENCH_SOURCE/R-2.0.0.tar.gz /tmp/`                   |
+#' |  3 | `cp_file_ram_to_drive`  | `cp /tmp/R-2.0.0.tar.gz $BENCH_DRIVE/`                    |
+#' |  4 | `cp_file_drive_to_ram`  | `cp $BENCH_DRIVE/R-2.0.0.tar.gz /tmp/`                    |
+#' |  5 | `rm_file_drive`         | `rm $BENCH_DRIVE/R-2.0.0.tar.gz`                          |
+#' |  6 | `untar_ram_to_drive`    | `tar zxf /tmp/R-2.0.0.tar.gz -C $BENCH_DRIVE/`            |
+#' |  7 | `ls_recursive_drive`    | `ls -lR $BENCH_DRIVE/R-2.0.0/src/library/`                |
+#' |  8 | `find_drive`            | `find $BENCH_DRIVE/R-2.0.0/ -type f -name Rconnections.h` |
+#' |  9 | `du_drive`              | `du -sb $BENCH_DRIVE/R-2.0.0/`                            |
+#' | 10 | `chmod_recursive_drive` | `chmod -R o-r $BENCH_DRIVE/R-2.0.0/`                      |
+#' | 11 | `tar_drive_to_ram`      | `tar cf /tmp/foo.tar $BENCH_DRIVE/R-2.0.0/`               |
+#' | 12 | `tar_drive_to_drive`    | `tar cf $BENCH_DRIVE/foo.tar $BENCH_DRIVE/R-2.0.0/`       |
+#' | 13 | `gzip_drive_to_drive`   | `gzip $BENCH_DRIVE/foo.tar`                               |
+#' | 14 | `rm_folder_drive`       | `rm -rf $BENCH_DRIVE/R-2.0.0/`                            |
+#' | 15 | `total_time`            | Total time for all of the above steps                     |
+#'
+#'
+#' @section How the raw data is produced:
+#' These data are produced using the \file{utils/bench.sh} script that
+#' benchmarks the called command using something like:
+#'
+#' ```sh
+#' $(type -P time) --format="%e\t%S\t%U\t%P\t%w\t%c\t%I\t%O\t%r\t%s\t%k\t%M\t%t\t%W\t%F\t%R\t%x\t%C" <command>
+#' ```
 #'
 #' @example incl/extract_bench_log.R
 #'

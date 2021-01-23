@@ -10,7 +10,7 @@ trim_bench_log(data)
 \item{data}{A bench_log data.frame}
 }
 \value{
-A [tibble::tibble] data.frame of class `bench_log`.
+A \link[tibble:tibble]{tibble::tibble} data.frame of class \code{bench_log}.
 }
 \description{
 Drop non-informative entries

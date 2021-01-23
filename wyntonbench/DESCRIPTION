@@ -16,3 +16,4 @@ LazyLoad: TRUE
 URL: https://github.com/UCSF-HPC/wynton-bench
 BugReports: https://github.com/UCSF-HPC/wynton-bench/issues
 RoxygenNote: 7.1.1
+Roxygen: list(markdown = TRUE)

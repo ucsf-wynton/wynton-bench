@@ -13,7 +13,7 @@ read_all_bench_logs(path, recursive = TRUE, pattern = "[.]log$", ...)
 
 \item{pattern}{A regular expression matching files to be read.}
 
-\item{\dots}{Addition arguments passed to [read_bench_log].}
+\item{\dots}{Addition arguments passed to \link{read_bench_log}.}
 }
 \value{
 A tibble.

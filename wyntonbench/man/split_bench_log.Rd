@@ -21,7 +21,7 @@ split_bench_log(
 \item{prefix}{(character) The prefix to use for each file written}
 
 \item{parse}{If TRUE, the extracted entries are parsed by
-[extract_bench_log].}
+\link{extract_bench_log}.}
 
 \item{skip}{(logical) Should already existing output files be skipped,
 or be recreated.}
