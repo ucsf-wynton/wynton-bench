@@ -23,7 +23,7 @@ makedir() {
 BENCH_LOGPATH=${BENCH_LOGPATH:-"${PWD}/.wynton-bench"}
 makedir "$BENCH_LOGPATH"
 
-RAMTMPDIR=${RAMTMPDIR:-/tmp}
+RAMTMPDIR=${RAMTMPDIR:-/tmp/$USER}
 makedir "$RAMTMPDIR"
 
 [[ -z "$TEST_DRIVE" ]] && error "'TEST_DRIVE' not set or empty"
@@ -35,7 +35,7 @@ echo "BENCH_LOGFILE: '$BENCH_LOGFILE'"
 ## Append to log file atomically
 BENCH_LOGFILE_FINAL=$BENCH_LOGFILE
 
-mkdir -p "$RAMTMPDIR"
+makedir "$RAMTMPDIR"
 BENCH_LOGFILE=$(mktemp --tmpdir="$RAMTMPDIR" BENCH_LOGFILE.XXXXXX)
 echo "BENCH_LOGFILE (temporary): '$BENCH_LOGFILE'"
 
@@ -47,11 +47,11 @@ makedir "$RAMTMPDIR/.wynton-bench"
 
 # Create temporary working directory on drive reciding in memory,
 # which typically is /tmp
-mkdir -p "$RAMTMPDIR/.wynton-bench"
+makedir "$RAMTMPDIR/.wynton-bench"
 tmpdir=$(mktemp --tmpdir="$RAMTMPDIR/.wynton-bench" --directory .bench.XXXXXX)
 
 # Create temporary working directory on current drive
-mkdir -p "$PWD/.wynton-bench"
+makedir "$PWD/.wynton-bench"
 workdir=$(mktemp --tmpdir="$PWD/.wynton-bench" --directory .bench.XXXXXX)
 chdir "$workdir"
 

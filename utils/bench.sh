@@ -63,7 +63,8 @@ bench_header() {
 bench() {
     local outfile
     
-    mkdir -p "$RAMTMPDIR"
+    mkdir -p "$RAMTMPDIR" || { >&2 echo "ERROR: Failed to create directory: $RAMTMPDIR"; exit 1; }
+    
     outfile=$(mktemp --tmpdir="$RAMTMPDIR")
 
     BENCH_ID=${BENCH_ID:-${BENCH_LOGFILE##*.}}
