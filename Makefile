@@ -6,12 +6,14 @@ test-files: test-files/R-2.0.0.tar.gz
 
 ## A 10 MB file
 test-files/R-2.0.0.tar.gz:
-	cd $(@D);\
+	mkdir -p "$(@D)"
+	cd "$(@D)";\
 	curl -O https://cloud.r-project.org/src/base/R-2/R-2.0.0.tar.gz
 
 ## A 30 MB file
 test-files/R-3.6.1.tar.gz:
-	cd $(@D);\
+	mkdir -p "$(@D)"
+	cd "$(@D)";\
 	curl -O https://cloud.r-project.org/src/base/R-3/R-3.6.1.tar.gz
 
 check:
