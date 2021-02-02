@@ -62,6 +62,8 @@ bench_header() {
 
 bench() {
     local outfile
+    
+    mkdir -p "$RAMTMPDIR"
     outfile=$(mktemp --tmpdir="$RAMTMPDIR")
 
     BENCH_ID=${BENCH_ID:-${BENCH_LOGFILE##*.}}
