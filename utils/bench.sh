@@ -48,7 +48,7 @@
 ##############################################################################
 
 ## Constants
-RAMTMPDIR=${RAMTMPDIR:-/tmp}
+RAMTMPDIR=${RAMTMPDIR:-/tmp/$USER}
 BENCH_TIME=$(type -P time)
 BENCH_TIME_OPTS="--quiet"
 BENCH_TIME_OPTS=

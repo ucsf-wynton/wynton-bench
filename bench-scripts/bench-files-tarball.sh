@@ -5,11 +5,17 @@ error() {
     exit 1
 }
 
+debug() {
+    ${BENCH_DEBUG:-false} || return
+    >&2 echo "DEBUG: $*"
+}
+
 chdir() {
     cd "$1" || error "Failed to change directory: $1"
 }
 
 makedir() {
+    debug "makedir('$1')"
     mkdir -p "$1" || error "Failed to create directory: $1"
 }
 
@@ -21,11 +27,14 @@ makedir() {
 . "$BENCH_HOME/utils/bench.sh"
 
 BENCH_LOGPATH=${BENCH_LOGPATH:-"${PWD}/.wynton-bench"}
+debug "BENCH_LOGPATH=$BENCH_LOGPATH"
 makedir "$BENCH_LOGPATH"
 
 RAMTMPDIR=${RAMTMPDIR:-/tmp/$USER}
+debug "RAMTMPDIR=$RAMTMPDIR"
 makedir "$RAMTMPDIR"
 
+debug "TEST_DRIVE=$TEST_DRIVE"
 [[ -z "$TEST_DRIVE" ]] && error "'TEST_DRIVE' not set or empty"
 
 BENCH_LOGNAME=${BENCH_LOGNAME:-"bench-files-tarball_${TEST_DRIVE//\//_}.log"}
@@ -35,10 +44,10 @@ echo "BENCH_LOGFILE: '$BENCH_LOGFILE'"
 ## Append to log file atomically
 BENCH_LOGFILE_FINAL=$BENCH_LOGFILE
 
-makedir "$RAMTMPDIR"
 BENCH_LOGFILE=$(mktemp --tmpdir="$RAMTMPDIR" BENCH_LOGFILE.XXXXXX)
 echo "BENCH_LOGFILE (temporary): '$BENCH_LOGFILE'"
 
+debug "PWD=$PWD"
 opwd=$PWD
 chdir "$TEST_DRIVE"
 
@@ -47,11 +56,9 @@ makedir "$RAMTMPDIR/.wynton-bench"
 
 # Create temporary working directory on drive reciding in memory,
 # which typically is /tmp
-makedir "$RAMTMPDIR/.wynton-bench"
 tmpdir=$(mktemp --tmpdir="$RAMTMPDIR/.wynton-bench" --directory .bench.XXXXXX)
 
 # Create temporary working directory on current drive
-makedir "$PWD/.wynton-bench"
 workdir=$(mktemp --tmpdir="$PWD/.wynton-bench" --directory .bench.XXXXXX)
 chdir "$workdir"
 
