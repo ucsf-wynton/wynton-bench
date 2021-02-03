@@ -37,7 +37,7 @@ BENCH_LOGFILE: '/wynton/home/boblab/alice/wynton-bench-logs/dev3/bench-files-tar
 BENCH_LOGFILE (temporary): '/tmp/alice/BENCH_LOGFILE.lpJ8F3'
 ```
 
-The raw benchmark results are saved to `~/wynton-bench-logs/$HOSTNAME/`;
+The raw benchmark results are appended to tab-delimited files in `~/wynton-bench-logs/$HOSTNAME/`;
 
 ```sh
 $ ls -lrt ~/wynton-bench-logs/$HOSTNAME/
