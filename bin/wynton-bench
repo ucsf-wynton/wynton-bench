@@ -178,7 +178,14 @@ if [[ $action == "timeline" ]]; then
     width=$(tput cols)
     n=$((width-1))
     
-    bench_logfile="$data_path/bench-files-tarball__${TEST_DRIVE}.log"
+    bench_logfile="$data_path/bench-files-tarball__${TEST_DRIVE}.tsv"
+    
+    ## Backward compatibility
+    ## https://github.com/ucsf-wynton/wynton-bench/issues/11
+    if [[ ! -f "$bench_logfile" ]]; then
+        bench_logfile="$data_path/bench-files-tarball__${TEST_DRIVE}.log"
+    fi
+    
     assert_file "$bench_logfile"
     
     ## Load signals

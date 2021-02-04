@@ -11,7 +11,7 @@
 #'
 #' @importFrom utils file_test
 import_bench_logs <- function(root="wynton-bench-logs", skip=TRUE, verbose=FALSE) {
-  pathnames <- dir(path=root, pattern="bench-files-.*[.]log$", recursive=TRUE)
+  pathnames <- dir(path=root, pattern="bench-files-.*[.](log|tsv)$", recursive=TRUE)
   hostnames <- unique(dirname(pathnames))
   if (verbose) message(sprintf("Hostnames: [n=%d]", length(hostnames)))
 
@@ -21,7 +21,7 @@ import_bench_logs <- function(root="wynton-bench-logs", skip=TRUE, verbose=FALSE
     path <- file.path(root, hostname)
     pathname <- file.path(root, sprintf("%s.bench_log.rds", hostname))
     if (skip && file_test("-f", pathname)) next
-    pathnames <- dir(path=path, pattern="bench-files-.*[.]log$", full.names=TRUE)
+    pathnames <- dir(path=path, pattern="bench-files-.*[.](log|tsv)$", full.names=TRUE)
     data <- lapply(pathnames, FUN=read_bench_log)
     data <- do.call(rbind, data)
     stopifnot(is.data.frame(data), inherits(data, "bench_log"))

@@ -37,9 +37,24 @@ makedir "$RAMTMPDIR"
 debug "TEST_DRIVE=$TEST_DRIVE"
 [[ -z "$TEST_DRIVE" ]] && error "'TEST_DRIVE' not set or empty"
 
-BENCH_LOGNAME=${BENCH_LOGNAME:-"bench-files-tarball_${TEST_DRIVE//\//_}.log"}
+## Backward compatibility
+## https://github.com/ucsf-wynton/wynton-bench/issues/11
+if [[ -z "$BENCH_LOGNAME" ]] && [[ -z "$BENCH_LOGFILE" ]]; then
+  BENCH_LOGNAME="bench-files-tarball_${TEST_DRIVE//\//_}.log"
+  BENCH_LOGFILE="$BENCH_LOGPATH/$BENCH_LOGNAME"
+  if [[ ! -f "$BENCH_LOGFILE" ]]; then
+    BENCH_LOGNAME=
+    BENCH_LOGFILE=
+  fi
+fi
+
+BENCH_LOGNAME=${BENCH_LOGNAME:-"bench-files-tarball_${TEST_DRIVE//\//_}.tsv"}
 BENCH_LOGFILE=${BENCH_LOGFILE:-"$BENCH_LOGPATH/$BENCH_LOGNAME"}
+
 echo "BENCH_LOGFILE: '$BENCH_LOGFILE'"
+
+exit 0
+
 
 ## Append to log file atomically
 BENCH_LOGFILE_FINAL=$BENCH_LOGFILE

@@ -16,7 +16,7 @@
 #' print(data)
 #'
 #' @export
-read_all_bench_logs <- function(path, recursive=TRUE, pattern="[.]log$", ...) {
+read_all_bench_logs <- function(path, recursive=TRUE, pattern="[.](log|tsv)$", ...) {
   files <- dir(path=path, pattern=pattern, recursive=recursive, full.names=TRUE)
   logs <- lapply(files, FUN = read_bench_log, ...)
   do.call(rbind, logs)

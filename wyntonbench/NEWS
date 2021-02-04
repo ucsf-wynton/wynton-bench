@@ -1,6 +1,15 @@
 Package: wyntonbench
 ====================
 
+Version: 0.0.0-9003 [2021-02-03]
+
+NEW FEATURES:
+
+ * Raw benchmark data files are now using filename extension 'tsv'.  For
+   backward compatibility reasons, old files with extension 'log' are also
+   recognized for now.
+
+
 Version: 0.0.0-9002 [2021-01-20]
 
 DOCUMENTATION:

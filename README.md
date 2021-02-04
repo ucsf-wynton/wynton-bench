@@ -31,9 +31,9 @@ $ $BENCH_HOME/cron-scripts/bench-files-tarball.sh
 This outputs:
 
 ```
-BENCH_LOGFILE: '/wynton/home/boblab/alice/wynton-bench-logs/dev3/bench-files-tarball__tmp_alice.log'
+BENCH_LOGFILE: '/wynton/home/boblab/alice/wynton-bench-logs/dev3/bench-files-tarball__tmp_alice.tsv'
 BENCH_LOGFILE (temporary): '/tmp/alice/BENCH_LOGFILE.hTTRSZ'
-BENCH_LOGFILE: '/wynton/home/boblab/alice/wynton-bench-logs/dev3/bench-files-tarball__wynton_home_boblab_alice.log'
+BENCH_LOGFILE: '/wynton/home/boblab/alice/wynton-bench-logs/dev3/bench-files-tarball__wynton_home_boblab_alice.tsv'
 BENCH_LOGFILE (temporary): '/tmp/alice/BENCH_LOGFILE.lpJ8F3'
 ```
 
@@ -42,8 +42,8 @@ The raw benchmark results are appended to tab-delimited files in `~/wynton-bench
 ```sh
 $ ls -lrt ~/wynton-bench-logs/$HOSTNAME/
 total 30
--rw-r--r--. 1 alice lsd  7091 Feb  2 15:52 bench-files-tarball__tmp_alice.log
--rw-r--r--. 1 alice lsd 22866 Feb  2 15:52 bench-files-tarball__wynton_home_boblab_alice.log
+-rw-r--r--. 1 alice lsd  7091 Feb  2 15:52 bench-files-tarball__tmp_alice.tsv
+-rw-r--r--. 1 alice lsd 22866 Feb  2 15:52 bench-files-tarball__wynton_home_boblab_alice.tsv
 ```
 
 

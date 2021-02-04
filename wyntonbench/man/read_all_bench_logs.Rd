@@ -4,7 +4,7 @@
 \alias{read_all_bench_logs}
 \title{Read multiple bench log files at once}
 \usage{
-read_all_bench_logs(path, recursive = TRUE, pattern = "[.]log$", ...)
+read_all_bench_logs(path, recursive = TRUE, pattern = "[.](log|tsv)$", ...)
 }
 \arguments{
 \item{path}{The path to bench log files.}
