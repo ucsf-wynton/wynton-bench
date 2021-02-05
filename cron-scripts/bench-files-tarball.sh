@@ -1,9 +1,10 @@
 #! /usr/bin/env bash
 
 ## Sanity checks
-[[ -d "$HOME" ]] || { 1>&2 echo "ERROR: Environment variable not set: HOME"; exit 1; }
-[[ -d "$HOSTNAME" ]] || { 1>&2 echo "ERROR: Environment variable not set: HOSTNAME"; exit 1; }
-[[ -d "$USER" ]] || { 1>&2 echo "ERROR: Environment variable not set: USER"; exit 1; }
+[[ -z "$HOME" ]] && { 1>&2 echo "ERROR: Environment variable not set: HOME"; exit 1; }
+[[ -z "$HOSTNAME" ]] && { 1>&2 echo "ERROR: Environment variable not set: HOSTNAME"; exit 1; }
+[[ -z "$USER" ]] && { 1>&2 echo "ERROR: Environment variable not set: USER"; exit 1; }
+[[ -z "$BENCH_HOME" ]] && { 1>&2 echo "ERROR: Environment variable not set: BENCH_HOME"; exit 1; }
 
 # shellcheck disable=SC2034
 export BENCH_LOGPATH=$HOME/wynton-bench-logs/$HOSTNAME
