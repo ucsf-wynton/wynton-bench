@@ -218,7 +218,7 @@ if [[ $action == "timeline" ]]; then
         period="$past-$now "
     fi
     if [[ "${date[-1]}" != "$today" ]]; then
-        period="$date $period"
+        period="${date[*]} $period"
     fi    
     label=${LABEL:-" [${drive}] "}
     range=$(printf " ~%.1fs [%.1fs,%.1fs]" "${stats[3]}" "${stats[0]}" "${stats[1]}")
