@@ -199,8 +199,8 @@ if [[ $action == "timeline" ]]; then
     now=${hhmm[-1]}
     mapfile -t signals < <(echo "${total_time_entries}" | cut -d $'\t' -f 21)
     #echo "signals=${signals[@]}"
-    signals=(${signals[@]:0:$n})
-    $reverse && signals=($(printf '%s\n' "${signals[@]}" | tac | tr '\n' ' '))
+    signals=("${signals[@]:0:$n}")
+    $reverse && mapfile -t signals < <(printf '%s\n' "${signals[@]}" | tac | tr '\n' ' ')
     
     
     mapfile -t stats < <(echo "${signals[@]}" | awk '{ count[NR] = $1; asort(count); min=1e12; max=-1e12; sum=0; for (v=1; v<=NF; v++) { min=(min<$v?min:$v); max=(max>$v?max:$v); sum+=$v }; if (NR % 2) { median = count[(NR + 1) / 2]; } else { median = (count[(NR / 2)] + count[(NR / 2) + 1]) / 2.0; } } END { printf "%s\n%s\n%s\n%s\n", min, max, sum/NF, median; }')
@@ -209,7 +209,7 @@ if [[ $action == "timeline" ]]; then
     elif [[ "$format" == "dbl" ]]; then
       data=$(echo "${signals[@]}")
     elif [[ "$format" == "spark" ]]; then
-      data=$("${SPARK_HOME}/bin/spark" "100 ${signals[@]}")
+      data=$("${SPARK_HOME}/bin/spark" "100 ${signals[*]}")
     fi
     
     if $reverse; then
