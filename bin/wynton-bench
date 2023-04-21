@@ -207,7 +207,7 @@ if [[ $action == "timeline" ]]; then
     if [[ "$format" == "int" ]]; then
       data=$(printf "%0.f " "${signals[@]}")
     elif [[ "$format" == "dbl" ]]; then
-      data=$(echo "${signals[@]}")
+      data="${signals[*]}"
     elif [[ "$format" == "spark" ]]; then
       data=$("${SPARK_HOME}/bin/spark" "100 ${signals[*]}")
     fi
