@@ -22,8 +22,8 @@
 ### Requirements:
 ### * spark: https://github.com/holman/spark
 ###
-### Version: 0.0.3
-### Copyright: Henrik Bengtsson (2020-2021)
+### Version: 0.0.4
+### Copyright: Henrik Bengtsson (2020-2023)
 ### License: GPL (>= 2.1) [https://www.gnu.org/licenses/gpl.html]
 call="$0 $*"
 
@@ -203,8 +203,7 @@ if [[ $action == "timeline" ]]; then
     $reverse && signals=($(printf '%s\n' "${signals[@]}" | tac | tr '\n' ' '))
     
     
-    range=($(echo "${signals[@]}" | awk '{ count[NR] = $1; asort(count); min=1e12; max=-1e12; sum=0; for (v=1; v<=NF; v++) { min=(min<$v?min:$v); max=(max>$v?max:$v); sum+=$v }; if (NR % 2) { median = count[(NR + 1) / 2]; } else { median = (count[(NR / 2)] + count[(NR / 2) + 1]) / 2.0; } } END { print min, max, sum/NF, median; }'
-    ))
+    mapfile -t stats < <(echo "${signals[@]}" | awk '{ count[NR] = $1; asort(count); min=1e12; max=-1e12; sum=0; for (v=1; v<=NF; v++) { min=(min<$v?min:$v); max=(max>$v?max:$v); sum+=$v }; if (NR % 2) { median = count[(NR + 1) / 2]; } else { median = (count[(NR / 2)] + count[(NR / 2) + 1]) / 2.0; } } END { printf "%s\n%s\n%s\n%s\n", min, max, sum/NF, median; }')
     if [[ "$format" == "int" ]]; then
       data=$(printf "%0.f " "${signals[@]}")
     elif [[ "$format" == "dbl" ]]; then
@@ -222,7 +221,7 @@ if [[ $action == "timeline" ]]; then
         period="$date $period"
     fi    
     label=${LABEL:-" [${drive}] "}
-    range=$(printf " ~%.1fs [%.1fs,%.1fs]" "${range[3]}" "${range[0]}" "${range[1]}")
+    range=$(printf " ~%.1fs [%.1fs,%.1fs]" "${stats[3]}" "${stats[0]}" "${stats[1]}")
     pad=$((${#data}-1 - ${#period} - ${#label} - ${#range}))
     padL=$((pad / 2))
     padR=$((pad - padL))
