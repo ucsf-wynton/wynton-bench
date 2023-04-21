@@ -17,6 +17,7 @@ test-files/R-3.6.1.tar.gz:
 	curl -O https://cloud.r-project.org/src/base/R-3/R-3.6.1.tar.gz
 
 check:
+	shellcheck bin/wynton-bench
 	shellcheck utils/*.sh
 	shellcheck -x cron-scripts/*.sh
 	shellcheck -x bench-scripts/*.sh
