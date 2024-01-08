@@ -1,5 +1,8 @@
 #! /usr/bin/env bash
 
+# --------------------------------------------------------------------
+# Initialize
+# --------------------------------------------------------------------
 error() {
     >&2 echo "ERROR: $*"
     exit 1
@@ -26,6 +29,15 @@ makedir() {
 # shellcheck disable=SC1090
 . "$BENCH_HOME/utils/bench.sh"
 
+
+# --------------------------------------------------------------------
+# Setup benchmark environment
+# --------------------------------------------------------------------
+debug "BENCH_SOURCE=${BENCH_SOURCE:?}"
+BASH_SOURCE_NAME="$(basename "${BASH_SOURCE:?}")"
+BASH_SOURCE_NAME="${BASH_SOURCE_NAME%.*}"
+debug "BENCH_SOURCE_NAME=${BENCH_SOURCE_NAME:?}"
+
 BENCH_LOGPATH=${BENCH_LOGPATH:-"${PWD}/.wynton-bench"}
 debug "BENCH_LOGPATH=$BENCH_LOGPATH"
 makedir "$BENCH_LOGPATH"
@@ -40,7 +52,7 @@ debug "TEST_DRIVE=$TEST_DRIVE"
 ## Backward compatibility
 ## https://github.com/ucsf-wynton/wynton-bench/issues/11
 if [[ -z "$BENCH_LOGNAME" ]] && [[ -z "$BENCH_LOGFILE" ]]; then
-  BENCH_LOGNAME="bench-files-tarball_${TEST_DRIVE//\//_}.log"
+  BENCH_LOGNAME="${BASH_SOURCE_NAME}_${TEST_DRIVE//\//_}.log"
   BENCH_LOGFILE="$BENCH_LOGPATH/$BENCH_LOGNAME"
   if [[ ! -f "$BENCH_LOGFILE" ]]; then
     BENCH_LOGNAME=
@@ -48,7 +60,7 @@ if [[ -z "$BENCH_LOGNAME" ]] && [[ -z "$BENCH_LOGFILE" ]]; then
   fi
 fi
 
-BENCH_LOGNAME=${BENCH_LOGNAME:-"bench-files-tarball_${TEST_DRIVE//\//_}.tsv"}
+BENCH_LOGNAME=${BENCH_LOGNAME:-"${BASH_SOURCE_NAME}_${TEST_DRIVE//\//_}.tsv"}
 BENCH_LOGFILE=${BENCH_LOGFILE:-"$BENCH_LOGPATH/$BENCH_LOGNAME"}
 
 echo "BENCH_LOGFILE: '$BENCH_LOGFILE'"
@@ -82,6 +94,11 @@ bench echo "HOSTNAME=$HOSTNAME" > /dev/null
 bench echo "uptime=$(uptime)" > /dev/null
 bench echo "PWD=$PWD" > /dev/null
 bench echo "TEST_DRIVE=$TEST_DRIVE" > /dev/null
+
+
+# --------------------------------------------------------------------
+# Run benchmark tests
+# --------------------------------------------------------------------
 
 # Benchmark copying a large tarball to RAM temporary drive
 # Comment: Over a long time, this will give us relative stats on
@@ -135,6 +152,11 @@ t_end=$(date "+%s%N")
 t_delta=$(bc <<<"scale=3; ($t_end - $t_begin) / 1000000000")
 bench echo "total_time=$t_delta seconds" > /dev/null
 
+
+
+# --------------------------------------------------------------------
+# Record benchmark results
+# --------------------------------------------------------------------
 # Cleanup
 chdir "$opwd"
 rm -rf -- "$workdir"
