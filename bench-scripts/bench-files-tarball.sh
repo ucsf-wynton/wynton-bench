@@ -33,7 +33,7 @@ makedir() {
 # --------------------------------------------------------------------
 # Setup benchmark environment
 # --------------------------------------------------------------------
-debug "BENCH_SOURCE=${BENCH_SOURCE:?}"
+debug "BASH_SOURCE=${BASH_SOURCE:?}"
 BASH_SOURCE_NAME="$(basename "${BASH_SOURCE:?}")"
 BASH_SOURCE_NAME="${BASH_SOURCE_NAME%.*}"
 debug "BENCH_SOURCE_NAME=${BENCH_SOURCE_NAME:?}"

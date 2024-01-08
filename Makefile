@@ -16,7 +16,9 @@ test-files/R-3.6.1.tar.gz:
 	cd "$(@D)";\
 	curl -O https://cloud.r-project.org/src/base/R-3/R-3.6.1.tar.gz
 
-check:
+check: shellcheck
+
+shellcheck:
 	shellcheck bin/wynton-bench
 	shellcheck utils/*.sh
 	shellcheck -x cron-scripts/*.sh
